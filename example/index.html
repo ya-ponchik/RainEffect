@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body style="margin: 0;">
+		<canvas style="position: absolute;"></canvas>
+		<script type="module">
+		import { RainRenderer, Raindrops, loadImages, createCanvas } from '../dist/bundle.js';
+
+		const textureBgSize = { width: 384, height: 256 };
+		const textureFgSize = { width: 96, height: 64 };
+
+		const textures = await loadImages([
+			{ name: "dropAlpha", src: "drop-alpha.png" },
+			{ name: "dropColor", src: "drop-color.png" },
+			{ name: "textureDrizzleFg", src: "texture-drizzle-fg.png" },
+			{ name: "textureDrizzleBg", src: "texture-drizzle-bg.png" },
+		]);
+
+		const canvas = document.querySelector('canvas');
+
+		const DPI = window.devicePixelRatio;
+		canvas.width = window.innerWidth * DPI;
+		canvas.height = window.innerHeight * DPI;
+		canvas.style.width = window.innerWidth + 'px';
+		canvas.style.height = window.innerHeight + 'px';
+
+		const raindrops = new Raindrops(canvas.width, canvas.height, DPI, textures.dropAlpha.img, textures.dropColor.img, {
+			collisionRadius: 0.45,
+			dropletsCleaningRadiusMultiplier: 0.28,
+			raining: true,
+			minR: 10,
+			maxR: 40,
+			rainChance: 0.15,
+			rainLimit: 2,
+			dropletsRate: 10,
+			dropletsSize: [3.5, 6],
+			trailRate: 1,
+			trailScaleRange: [0.25, 0.35],
+			fg: textures.textureDrizzleFg.img,
+			bg: textures.textureDrizzleBg.img,
+			flashFg: null,
+			flashBg: null,
+			flashChance: 0,
+			collisionRadiusIncrease: 0.0002,
+		});
+
+		const textureFg = createCanvas(textureFgSize.width, textureFgSize.height);
+		textureFg.getContext('2d').drawImage(textures.textureDrizzleFg.img, 0, 0, textureFgSize.width, textureFgSize.height);
+		const textureBg = createCanvas(textureBgSize.width, textureBgSize.height);
+		textureBg.getContext('2d').drawImage(textures.textureDrizzleBg.img, 0, 0, textureBgSize.width, textureBgSize.height);
+
+		new RainRenderer(canvas, raindrops.canvas, textureFg, textureBg, null, {
+			brightness: 1.04,
+			alphaMultiply: 6,
+			alphaSubtract: 3,
+		});
+		</script>
+	</body>
+</html>
