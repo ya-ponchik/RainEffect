@@ -10,9 +10,6 @@
 		<script type="module">
 		import { RainRenderer, Raindrops, loadImages, createCanvas } from '../dist/bundle.js';
 
-		const textureBgSize = { width: 384, height: 256 };
-		const textureFgSize = { width: 96, height: 64 };
-
 		const textures = await loadImages([
 			{ name: "dropAlpha", src: "drop-alpha.png" },
 			{ name: "dropColor", src: "drop-color.png" },
@@ -48,10 +45,10 @@
 			collisionRadiusIncrease: 0.0002,
 		});
 
-		const textureFg = createCanvas(textureFgSize.width, textureFgSize.height);
-		textureFg.getContext('2d').drawImage(textures.textureDrizzleFg.img, 0, 0, textureFgSize.width, textureFgSize.height);
-		const textureBg = createCanvas(textureBgSize.width, textureBgSize.height);
-		textureBg.getContext('2d').drawImage(textures.textureDrizzleBg.img, 0, 0, textureBgSize.width, textureBgSize.height);
+		const textureFg = createCanvas(96, 64);
+		textureFg.getContext('2d').drawImage(textures.textureDrizzleFg.img, 0, 0, textureFg.width, textureFg.height);
+		const textureBg = createCanvas(384, 256);
+		textureBg.getContext('2d').drawImage(textures.textureDrizzleBg.img, 0, 0, textureBg.width, textureBg.height);
 
 		new RainRenderer(canvas, raindrops.canvas, textureFg, textureBg, null, {
 			brightness: 1.04,
